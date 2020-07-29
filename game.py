@@ -26,39 +26,43 @@ def main():
     coords = []
     coords.append([random.randrange(0, 800), random.randrange(0, 600)])
     shapes.append(pygame.draw.circle(gameDisplay, random.choice(colors), coords[len(coords) - 1], 25))
-    print(shapes)
+
 
 
     count = 0
     
-    pygame.display.set_caption(str(count))
-
+    pygame.display.set_caption("score: " + str(count))
+   
+    interval = 1000
 
     while True:
-        
-
+        if len(shapes) >= 10:
+            pygame.display.set_caption("GAME OVER      score:" + str(count))
+        else:
+            if pygame.time.get_ticks() % interval == 0:
+                if interval > 600:
+                    interval -= 20
+                coords.append([random.randrange(0, 800), random.randrange(0, 600)])
+                shapes.append(pygame.draw.circle(gameDisplay, random.choice(colors), coords[len(coords) - 1], 25))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and len(shapes) < 10:
                 for i in range(len(shapes)): 
                     shape = shapes[i]
                     if shape.collidepoint(pygame.mouse.get_pos()):
                         count += 1
-                        pygame.display.set_caption(str(count)))
+                        pygame.display.set_caption("score: " + str(count))
 
                         #cover old shape
                         pygame.draw.circle(gameDisplay, black, coords[i], 25)
                         shapes.remove(shape)
                         coords.remove(coords[i])
 
-                        #draw new shape
-                        coords.append([random.randrange(0, 800), random.randrange(0, 600)])
-                        shapes.append(pygame.draw.circle(gameDisplay, random.choice(colors), coords[len(coords) - 1], 25))
+                        
                         break
-        if count == 10:
-            break #game finishes
+    
             
 
         pygame.display.update()
